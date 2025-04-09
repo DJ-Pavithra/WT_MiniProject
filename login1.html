@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Group Finder - Login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #7209b7;
+            --text-color: #333;
+            --light-text: #f8f9fa;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --input-bg: #e9ecef;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url(bg1.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--secondary-color);
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: var(--transition);
+        }
+
+        .button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            color: #e63946;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: var(--text-color);
+        }
+
+        .link {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .features {
+            margin-top: 30px;
+            background-color: rgba(67, 97, 238, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .features-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .features ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .features li {
+            margin: 10px 0;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="title">Study Group Finder</p>
+        <p class="subtitle">Connect, Learn, Succeed Together</p>
+        <p id="error-message" class="error"></p>
+        <form action="login.jsp" method="POST">
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" name="email" class="input" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" type="password" name="password" class="input" placeholder="Enter your password" required>
+            </div>
+            
+            <button id="login-btn" type="submit" class="button">Login</button>
+        </form>
+        <div class="footer">
+            <p>New to Study Group Finder? <a href="./register.html" class="link">Sign Up</a></p>
+        </div>
+        <div class="features">
+            <p class="features-title">Why join us?</p>
+            <ul>
+                <li>Join subject-specific study groups</li>
+                <li>Schedule virtual study sessions</li>
+                <li>Collaborate with peers</li>
+                <li>Track your progress</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const users = {
+            "user1@gmail.com": "password123",
+            "user2@gmail.com": "securepass",
+            "admin@gmail.com": "adminpass",
+            "pavithra@gmail.com": "pavi123"
+        };
+
+        let a = [];
+        function Auth() {
+            document.getElementById('login-btn').addEventListener('click', function () {
+                a[0] = document.getElementById('email').value.trim();
+                a[1] = password = document.getElementById('password').value.trim();
+                const loginButton = document.getElementById('login-btn');
+
+                loginButton.disabled = true;
+                loginButton.innerText = 'Logging in...';
+
+                setTimeout(() => {
+                    if (users[a[0]] && users[a[0]] === a[1]) {
+                        localStorage.setItem("loggedInUser", email);
+                        alert("Login successful!");
+                        document.location.href = "dashboard.html"; 
+                    } else {
+                        alert("Invalid email or password");    
+                        loginButton.innerText = 'Login';
+                        loginButton.disabled = false;
+                    }
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
