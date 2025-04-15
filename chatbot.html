@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomcat Chatbot</title>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #6366f1;
+      --light-color: #f3f4f6;
+      --dark-color: #1f2937;
+      --success-color: #10b981;
+      --border-radius: 12px;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f9fafb;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--dark-color);
+    }
+    
+    .chat-container {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 0;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 20px;
+    }
+    
+    .chat-header .logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .chat-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      line-height: 1.5;
+      position: relative;
+      word-wrap: break-word;
+    }
+    
+    .user-message {
+      align-self: flex-end;
+      background-color: var(--primary-color);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .bot-message {
+      align-self: flex-start;
+      background-color: white;
+      border-bottom-left-radius: 4px;
+    }
+    
+    .timestamp {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-top: 5px;
+    }
+    
+    .input-container {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+    
+    .input-container input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      outline: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+    }
+    
+    .input-container button {
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+    
+    .input-container button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .input-container button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+    
+    .typing-indicator {
+      display: flex;
+      align-self: flex-start;
+      background-color: white;
+      padding: 15px 20px;
+      border-radius: var(--border-radius);
+      margin-top: 10px;
+    }
+    
+    .typing-indicator span {
+      height: 8px;
+      width: 8px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+      animation: bounce 1.3s linear infinite;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.3s;
+      margin-right: 0;
+    }
+    
+    @keyframes bounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-4px);
+      }
+    }
+    
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .message {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="logo">N</div>
+        <h1>Nexus Chatbot</h1>
+      </div>
+  
+      <div class="chat-box" id="chat-box">
+        <div class="message bot-message">
+          Hello! I'm your Tomcat assistant. How can I help you today?
+          <div class="timestamp">Just now</div>
+        </div>
+      </div>
+  
+      <div id="suggestions" class="suggestions-box hidden"></div>
+  
+      <div id="typing-indicator" class="typing-indicator hidden">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+  
+      <div class="input-container">
+        <input type="text" id="msg" placeholder="Type your message..." autofocus />
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  
+    <script>
+      const chatBox = document.getElementById("chat-box");
+      const input = document.getElementById("msg");
+      const sendBtn = document.getElementById("send-btn");
+      const typingIndicator = document.getElementById("typing-indicator");
+      const suggestionsBox = document.getElementById("suggestions");
+  
+      input.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          sendMessage();
+        }
+      });
+  
+      input.addEventListener("input", function () {
+        sendBtn.disabled = input.value.trim() === "";
+        fetchSuggestions(input.value);
+      });
+  
+      function getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+  
+      function sendMessage() {
+        const message = input.value.trim();
+        if (!message) return;
+  
+        input.disabled = true;
+        sendBtn.disabled = true;
+  
+        chatBox.innerHTML += `
+          <div class="message user-message">
+            ${escapeHTML(message)}
+            <div class="timestamp">${getCurrentTime()}</div>
+          </div>
+        `;
+  
+        chatBox.scrollTop = chatBox.scrollHeight;
+        typingIndicator.classList.remove("hidden");
+        suggestionsBox.classList.add("hidden");
+  
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost/Nexus/bot.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function () {
+          typingIndicator.classList.add("hidden");
+  
+          if (xhr.status === 200) {
+            chatBox.innerHTML += `
+              <div class="message bot-message">
+                ${escapeHTML(xhr.responseText)}
+                <div class="timestamp">${getCurrentTime()}</div>
+              </div>
+            `;
+          } else {
+            chatBox.innerHTML += `
+              <div class="message bot-message">
+                Sorry, I'm having trouble connecting to the server. Please try again later.
+                <div class="timestamp">${getCurrentTime()}</div>
+              </div>
+            `;
+          }
+  
+          input.disabled = false;
+          sendBtn.disabled = false;
+          input.value = "";
+          input.focus();
+          chatBox.scrollTop = chatBox.scrollHeight;
+        };
+  
+        setTimeout(() => {
+          xhr.send("message=" + encodeURIComponent(message));
+        }, 500);
+      }
+  
+      function fetchSuggestions(query) {
+        if (!query.trim()) {
+          suggestionsBox.classList.add("hidden");
+          suggestionsBox.innerHTML = "";
+          return;
+        }
+  
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost/Nexus/suggest.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function () {
+          if (xhr.status === 200 && xhr.responseText.trim() !== "") {
+            suggestionsBox.innerHTML = JSON.parse(xhr.responseText).map(q => `<div class='suggestion' onclick='autoFillSuggestion("${q}")'>${q}</div>`).join("");
+            suggestionsBox.classList.remove("hidden");
+          } else {
+            suggestionsBox.classList.add("hidden");
+          }
+        };
+        xhr.send("query=" + encodeURIComponent(query));
+      }
+  
+      function autoFillSuggestion(text) {
+        input.value = text;
+        suggestionsBox.classList.add("hidden");
+        sendMessage();
+      }
+  
+      function escapeHTML(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+    </script>
+  
+    <style>
+      .suggestions-box {
+        background: #fff;
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+        padding: 5px;
+        position: absolute;
+        bottom: 70px;
+        width: calc(100% - 40px);
+        left: 20px;
+        z-index: 10;
+      }
+      .suggestion {
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      .suggestion:hover {
+        background: #f0f0f0;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </body>  
+</html>

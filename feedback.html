@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Form | Bakery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #1f2937;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--gray-100);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .feedback-container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 550px;
+      overflow: hidden;
+    }
+    
+    .feedback-header {
+      background: linear-gradient(135deg, var(--primary), #818cf8);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .feedback-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feedback-subtitle {
+      opacity: 0.9;
+      font-size: 1rem;
+    }
+    
+    .feedback-content {
+      padding: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--gray-600);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+    
+    .rating-group {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+    
+    .rating-item {
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      flex: 1;
+    }
+    
+    .rating-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .rating-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 0.5rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .rating-icon {
+      font-size: 1.75rem;
+      color: var(--gray-400);
+      transition: all 0.2s ease;
+    }
+    
+    .rating-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      transition: all 0.2s ease;
+    }
+    
+    .rating-input:checked + .rating-label {
+      background-color: var(--primary-light);
+    }
+    
+    .rating-input:checked + .rating-label .rating-icon {
+      color: var(--primary);
+      transform: scale(1.2);
+    }
+    
+    .rating-input:checked + .rating-label .rating-text {
+      color: var(--primary);
+    }
+    
+    /* Category-specific rating styles */
+    .rating-5 .rating-input:checked + .rating-label .rating-icon {
+      color: #10b981; /* Green for excellent */
+    }
+    
+    .rating-4 .rating-input:checked + .rating-label .rating-icon {
+      color: #3b82f6; /* Blue for good */
+    }
+    
+    .rating-3 .rating-input:checked + .rating-label .rating-icon {
+      color: #f59e0b; /* Orange for average */
+    }
+    
+    .rating-2 .rating-input:checked + .rating-label .rating-icon {
+      color: #fb923c; /* Light orange for poor */
+    }
+    
+    .rating-1 .rating-input:checked + .rating-label .rating-icon {
+      color: #ef4444; /* Red for terrible */
+    }
+    
+    .textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      width: 100%;
+      margin-top: 2rem;
+    }
+    
+    .submit-btn:hover {
+      background-color: #4338ca; /* Darker shade */
+      transform: translateY(-2px);
+    }
+    
+    .footer-note {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+    
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .category-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .category-checkbox {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    
+    .category-label {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      cursor: pointer;
+    }
+    
+    @media (max-width: 640px) {
+      .rating-group {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      .rating-item {
+        flex-basis: 30%;
+      }
+      
+      .categories {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="feedback-container">
+    <div class="feedback-header">
+      <h1 class="feedback-title">We Value Your Feedback</h1>
+      <p class="feedback-subtitle">Help us improve by sharing your experience</p>
+    </div>
+    
+    <div class="feedback-content">
+      <form id="feedbackForm">
+        <div class="form-group">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" id="name" name="CustomerName" class="form-input" placeholder="Enter your name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">How would you rate your overall experience?</label>
+          <div class="rating-group">
+            <div class="rating-item rating-5">
+              <input type="radio" id="rating5" name="Rating" value="5" class="rating-input" required>
+              <label for="rating5" class="rating-label">
+                <i class="fas fa-grin-stars rating-icon"></i>
+                <span class="rating-text">Excellent</span>
+              </label>
+            </div>
+            
+            <div class="rating-item rating-4">
+              <input type="radio" id="rating4" name="Rating" value="4" class="rating-input">
+              <label for="rating4" class="rating-label">
+                <i class="fas fa-smile rating-icon"></i>
+                <span class="rating-text">Good</span>
+              </label>
+            </div>
+            
+            <div class="rating-item rating-3">
+              <input type="radio" id="rating3" name="Rating" value="3" class="rating-input">
+              <label for="rating3" class="rating-label">
+                <i class="fas fa-meh rating-icon"></i>
+                <span class="rating-text">Average</span>
+              </label>
+            </div>
+            
+            <div class="rating-item rating-2">
+              <input type="radio" id="rating2" name="Rating" value="2" class="rating-input">
+              <label for="rating2" class="rating-label">
+                <i class="fas fa-frown rating-icon"></i>
+                <span class="rating-text">Poor</span>
+              </label>
+            </div>
+            
+            <div class="rating-item rating-1">
+              <input type="radio" id="rating1" name="Rating" value="1" class="rating-input">
+              <label for="rating1" class="rating-label">
+                <i class="fas fa-angry rating-icon"></i>
+                <span class="rating-text">Terrible</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="comments" class="form-label">Share your thoughts with us</label>
+          <textarea id="comments" name="Comments" class="form-input textarea" placeholder="Tell us what you liked and what we could improve..." required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> Submit Feedback
+        </button>
+      </form>
+      
+      <p class="footer-note">
+        Your feedback helps us serve you better. Thank you for taking the time to share your thoughts!
+      </p>
+    </div>
+  </div>
+
+  <script>
+
+    function appendFeedbackToXML(feedbackData) {
+      fetch('http://localhost/Nexus/append_feedback.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(feedbackData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Create success notification
+          const notification = document.createElement('div');
+          notification.style.position = 'fixed';
+          notification.style.top = '20px';
+          notification.style.left = '50%';
+          notification.style.transform = 'translateX(-50%)';
+          notification.style.backgroundColor = '#10b981';
+          notification.style.color = 'white';
+          notification.style.padding = '1rem 2rem';
+          notification.style.borderRadius = '8px';
+          notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+          notification.style.zIndex = '1000';
+          notification.innerHTML = '<i class="fas fa-check-circle"></i> Thank you! Your feedback has been received.';
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(function() {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+              document.body.removeChild(notification);
+              window.location.href = "dashboard.jsp"; // Redirect to feedback display page
+            }, 500);
+          }, 2000);
+        } else {
+          alert('Error saving feedback: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const rating = document.querySelector('input[name="Rating"]:checked').value;
+      const comments = document.getElementById("comments").value;
+      const date = new Date().toISOString().split("T")[0];
+
+      const feedbackData = {
+        CustomerName: name,
+        Rating: rating,
+        Comments: comments,
+        Date: date
+      };
+
+      appendFeedbackToXML(feedbackData);
+    });
+    
+    // Add animation to rating selection
+    const ratingInputs = document.querySelectorAll('.rating-input');
+    ratingInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        // Remove previous animations
+        document.querySelectorAll('.rating-icon').forEach(icon => {
+          icon.style.animation = '';
+        });
+        
+        // Add animation to selected rating
+        if (this.checked) {
+          const icon = this.nextElementSibling.querySelector('.rating-icon');
+          icon.style.animation = 'pulse 0.5s ease';
+        }
+      });
+    });
+    
+    // Add animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1.2); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

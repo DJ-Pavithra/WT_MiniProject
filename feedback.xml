@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Feedbacks>
+  <Feedback>
+    <CustomerName/>
+    <Rating/>
+    <Categories/>
+    <Comments/>
+    <Date/>
+  </Feedback>
+  <Feedback><CustomerName>Pavithra</CustomerName><Rating>3</Rating><Comments>Test</Comments><Date>2025-04-14</Date></Feedback><Feedback><CustomerName>Pavithra</CustomerName><Rating>3</Rating><Comments>Could add more features</Comments><Date>2025-04-14</Date></Feedback><Feedback><CustomerName>Pavithra</CustomerName><Rating>4</Rating><Comments>Good</Comments><Date>2025-04-14</Date></Feedback><Feedback><CustomerName>Pavithra</CustomerName><Rating>1</Rating><Comments>Test</Comments><Date>2025-04-14</Date></Feedback></Feedbacks>
